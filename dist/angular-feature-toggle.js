@@ -1,11 +1,11 @@
-(function() {
+(function(angular) {
   'use strict';
   angular.module('yh.featureToggle', ['semver'])
-    .config(initFeatures)
-    .config(overrideUIRouterStateFn)
-    .provider('featureToggle', featureToggle)
-    .directive('showIfFeature', showIfFeature)
-    .directive('hideIfFeature', hideIfFeature);
+      .config(initFeatures)
+      .config(overrideUIRouterStateFn)
+      .provider('featureToggle', featureToggle)
+      .directive('showIfFeature', showIfFeature)
+      .directive('hideIfFeature', hideIfFeature);
 
 
   function initFeatures(featureToggleProvider) {
@@ -16,7 +16,6 @@
       window.console.warn('could not detect features');
     }
   }
-  initFeatures.$inject = ['featureToggleProvider'];
 
 ///////////////
 // config ui router
@@ -43,10 +42,9 @@
         }
       };
     } catch(e) {
-        // the app doesnt use ui.router - silent failure
+      // the app doesnt use ui.router - silent failure
     }
   }
-  overrideUIRouterStateFn.$inject = ['$injector', 'featureToggleProvider'];
 
 
 // factory
@@ -99,7 +97,6 @@
       };
     }
   }
-  featureToggle.$inject = ['semverProvider'];
 
   function showIfFeature(featureToggle) {
     var ddo = {
@@ -118,28 +115,27 @@
       var args = attrs.showIfFeature.split(/\s+/);
       featureName = args[0];
       if (args.length > 1) {
-         featureVersion = args[1];
+        featureVersion = args[1];
       }
 
       if (featureToggle.isVersion(featureName, featureVersion)) {
-          childScope = scope.$new();
-          $transclude(childScope, function(clone) {
-              featureEl = clone;
-              element.after(featureEl).remove();
-          });
+        childScope = scope.$new();
+        $transclude(childScope, function(clone) {
+          featureEl = clone;
+          element.after(featureEl).remove();
+        });
       } else {
-          if(childScope) {
-              childScope.$destroy();
-              childScope = null;
-          }
-          if(featureEl) {
-              featureEl.after(element).remove();
-              featureEl = null;
-          }
+        if(childScope) {
+          childScope.$destroy();
+          childScope = null;
+        }
+        if(featureEl) {
+          featureEl.after(element).remove();
+          featureEl = null;
+        }
       }
     }
   }
-  showIfFeature.$inject = ['featureToggle'];
 
   function hideIfFeature(featureToggle) {
     var ddo = {
@@ -158,73 +154,72 @@
       var args = attrs.hideIfFeature.split(/\s+/);
       featureName = args[0];
       if (args.length > 1) {
-         featureVersion = args[1];
+        featureVersion = args[1];
       }
 
       if (featureToggle.isVersion(featureName, featureVersion)) {
         if(childScope) {
-            childScope.$destroy();
-            childScope = null;
+          childScope.$destroy();
+          childScope = null;
         }
         if(featureEl) {
-            featureEl.after(element).remove();
-            featureEl = null;
+          featureEl.after(element).remove();
+          featureEl = null;
         }
       } else {
         childScope = scope.$new();
         $transclude(childScope, function(clone) {
-            featureEl = clone;
-            element.after(featureEl).remove();
+          featureEl = clone;
+          element.after(featureEl).remove();
         });
       }
     }
   }
-  hideIfFeature.$inject = ['featureToggle'];
-})();
+})(window.angular);
 
 // semver
 (function() {
   'use strict';
   angular.module('semver', [])
-    .provider('semver', semver);
+      .provider('semver', semver);
 
-    function semver() {
-      return {
-        parse: parse,
-        valid: valid,
-        clean: clean,
-        inc: inc,
-        SemVer: SemVer,
-        diff: diff,
-        compareIdentifiers: compareIdentifiers,
-        rcompareIdentifiers: rcompareIdentifiers,
-        major: major,
-        minor: minor,
-        patch: patch,
-        compare: compare,
-        compareLoose: compareLoose,
-        rcompare: rcompare,
-        sort: sort,
-        rsort: rsort,
-        gt: gt,
-        lt: lt,
-        eq: eq,
-        neq: neq,
-        lte: lte,
-        gte: gte,
-        cmp: cmp,
-        Comparator: Comparator,
-        Range: Range,
-        toComparators: toComparators,
-        satisfies: satisfies,
-        maxSatisfying: maxSatisfying,
-        validRange: validRange,
-        ltr: ltr,
-        gtr: gtr,
-        outside: outside,
-        $get: function(){}
-      };
-    }
+  function semver() {
+    return {
+      parse: parse,
+      valid: valid,
+      clean: clean,
+      inc: inc,
+      SemVer: SemVer,
+      diff: diff,
+      compareIdentifiers: compareIdentifiers,
+      rcompareIdentifiers: rcompareIdentifiers,
+      major: major,
+      minor: minor,
+      patch: patch,
+      compare: compare,
+      compareLoose: compareLoose,
+      rcompare: rcompare,
+      sort: sort,
+      rsort: rsort,
+      gt: gt,
+      lt: lt,
+      eq: eq,
+      neq: neq,
+      lte: lte,
+      gte: gte,
+      cmp: cmp,
+      Comparator: Comparator,
+      Range: Range,
+      toComparators: toComparators,
+      satisfies: satisfies,
+      maxSatisfying: maxSatisfying,
+      validRange: validRange,
+      ltr: ltr,
+      gtr: gtr,
+      outside: outside,
+      $get: function(){}
+    };
+  }
 
   var MAX_LENGTH = 256;
   var MAX_SAFE_INTEGER = Number.MAX_SAFE_INTEGER || 9007199254740991;
@@ -258,24 +253,24 @@
 
   var MAINVERSION = R++;
   src[MAINVERSION] = '(' + src[NUMERICIDENTIFIER] + ')\\.' +
-                     '(' + src[NUMERICIDENTIFIER] + ')\\.' +
-                     '(' + src[NUMERICIDENTIFIER] + ')';
+      '(' + src[NUMERICIDENTIFIER] + ')\\.' +
+      '(' + src[NUMERICIDENTIFIER] + ')';
 
   var MAINVERSIONLOOSE = R++;
   src[MAINVERSIONLOOSE] = '(' + src[NUMERICIDENTIFIERLOOSE] + ')\\.' +
-                          '(' + src[NUMERICIDENTIFIERLOOSE] + ')\\.' +
-                          '(' + src[NUMERICIDENTIFIERLOOSE] + ')';
+      '(' + src[NUMERICIDENTIFIERLOOSE] + ')\\.' +
+      '(' + src[NUMERICIDENTIFIERLOOSE] + ')';
 
   // ## Pre-release Version Identifier
   // A numeric identifier, or a non-numeric identifier.
 
   var PRERELEASEIDENTIFIER = R++;
   src[PRERELEASEIDENTIFIER] = '(?:' + src[NUMERICIDENTIFIER] +
-                              '|' + src[NONNUMERICIDENTIFIER] + ')';
+      '|' + src[NONNUMERICIDENTIFIER] + ')';
 
   var PRERELEASEIDENTIFIERLOOSE = R++;
   src[PRERELEASEIDENTIFIERLOOSE] = '(?:' + src[NUMERICIDENTIFIERLOOSE] +
-                                   '|' + src[NONNUMERICIDENTIFIER] + ')';
+      '|' + src[NONNUMERICIDENTIFIER] + ')';
 
 
   // ## Pre-release Version
@@ -284,11 +279,11 @@
 
   var PRERELEASE = R++;
   src[PRERELEASE] = '(?:-(' + src[PRERELEASEIDENTIFIER] +
-                    '(?:\\.' + src[PRERELEASEIDENTIFIER] + ')*))';
+      '(?:\\.' + src[PRERELEASEIDENTIFIER] + ')*))';
 
   var PRERELEASELOOSE = R++;
   src[PRERELEASELOOSE] = '(?:-?(' + src[PRERELEASEIDENTIFIERLOOSE] +
-                         '(?:\\.' + src[PRERELEASEIDENTIFIERLOOSE] + ')*))';
+      '(?:\\.' + src[PRERELEASEIDENTIFIERLOOSE] + ')*))';
 
   // ## Build Metadata Identifier
   // Any combination of digits, letters, or hyphens.
@@ -302,7 +297,7 @@
 
   var BUILD = R++;
   src[BUILD] = '(?:\\+(' + src[BUILDIDENTIFIER] +
-               '(?:\\.' + src[BUILDIDENTIFIER] + ')*))';
+      '(?:\\.' + src[BUILDIDENTIFIER] + ')*))';
 
 
   // ## Full Version String
@@ -316,8 +311,8 @@
 
   var FULL = R++;
   var FULLPLAIN = 'v?' + src[MAINVERSION] +
-                  src[PRERELEASE] + '?' +
-                  src[BUILD] + '?';
+      src[PRERELEASE] + '?' +
+      src[BUILD] + '?';
 
   src[FULL] = '^' + FULLPLAIN + '$';
 
@@ -325,8 +320,8 @@
   // also, 1.0.0alpha1 (prerelease without the hyphen) which is pretty
   // common in the npm registry.
   var LOOSEPLAIN = '[v=\\s]*' + src[MAINVERSIONLOOSE] +
-                   src[PRERELEASELOOSE] + '?' +
-                   src[BUILD] + '?';
+      src[PRERELEASELOOSE] + '?' +
+      src[BUILD] + '?';
 
   var LOOSE = R++;
   src[LOOSE] = '^' + LOOSEPLAIN + '$';
@@ -344,19 +339,19 @@
 
   var XRANGEPLAIN = R++;
   src[XRANGEPLAIN] = '[v=\\s]*(' + src[XRANGEIDENTIFIER] + ')' +
-                     '(?:\\.(' + src[XRANGEIDENTIFIER] + ')' +
-                     '(?:\\.(' + src[XRANGEIDENTIFIER] + ')' +
-                     '(?:' + src[PRERELEASE] + ')?' +
-                     src[BUILD] + '?' +
-                     ')?)?';
+      '(?:\\.(' + src[XRANGEIDENTIFIER] + ')' +
+      '(?:\\.(' + src[XRANGEIDENTIFIER] + ')' +
+      '(?:' + src[PRERELEASE] + ')?' +
+      src[BUILD] + '?' +
+      ')?)?';
 
   var XRANGEPLAINLOOSE = R++;
   src[XRANGEPLAINLOOSE] = '[v=\\s]*(' + src[XRANGEIDENTIFIERLOOSE] + ')' +
-                          '(?:\\.(' + src[XRANGEIDENTIFIERLOOSE] + ')' +
-                          '(?:\\.(' + src[XRANGEIDENTIFIERLOOSE] + ')' +
-                          '(?:' + src[PRERELEASELOOSE] + ')?' +
-                          src[BUILD] + '?' +
-                          ')?)?';
+      '(?:\\.(' + src[XRANGEIDENTIFIERLOOSE] + ')' +
+      '(?:\\.(' + src[XRANGEIDENTIFIERLOOSE] + ')' +
+      '(?:' + src[PRERELEASELOOSE] + ')?' +
+      src[BUILD] + '?' +
+      ')?)?';
 
   var XRANGE = R++;
   src[XRANGE] = '^' + src[GTLT] + '\\s*' + src[XRANGEPLAIN] + '$';
@@ -404,7 +399,7 @@
   // it modifies, so that `> 1.2.3` ==> `>1.2.3`
   var COMPARATORTRIM = R++;
   src[COMPARATORTRIM] = '(\\s*)' + src[GTLT] +
-                        '\\s*(' + LOOSEPLAIN + '|' + src[XRANGEPLAIN] + ')';
+      '\\s*(' + LOOSEPLAIN + '|' + src[XRANGEPLAIN] + ')';
 
   // this one has to use the /g flag
   re[COMPARATORTRIM] = new RegExp(src[COMPARATORTRIM], 'g');
@@ -417,15 +412,15 @@
   // later.
   var HYPHENRANGE = R++;
   src[HYPHENRANGE] = '^\\s*(' + src[XRANGEPLAIN] + ')' +
-                     '\\s+-\\s+' +
-                     '(' + src[XRANGEPLAIN] + ')' +
-                     '\\s*$';
+      '\\s+-\\s+' +
+      '(' + src[XRANGEPLAIN] + ')' +
+      '\\s*$';
 
   var HYPHENRANGELOOSE = R++;
   src[HYPHENRANGELOOSE] = '^\\s*(' + src[XRANGEPLAINLOOSE] + ')' +
-                          '\\s+-\\s+' +
-                          '(' + src[XRANGEPLAINLOOSE] + ')' +
-                          '\\s*$';
+      '\\s+-\\s+' +
+      '(' + src[XRANGEPLAINLOOSE] + ')' +
+      '\\s*$';
 
   // Star ranges basically just allow anything at all.
   var STAR = R++;
@@ -557,8 +552,8 @@
       other = new SemVer(other, this.loose);
 
     return compareIdentifiers(this.major, other.major) ||
-           compareIdentifiers(this.minor, other.minor) ||
-           compareIdentifiers(this.patch, other.patch);
+        compareIdentifiers(this.minor, other.minor) ||
+        compareIdentifiers(this.patch, other.patch);
   };
 
   SemVer.prototype.comparePre = function(other) {
@@ -738,10 +733,10 @@
     }
 
     return (anum && !bnum) ? -1 :
-           (bnum && !anum) ? 1 :
-           a < b ? -1 :
-           a > b ? 1 :
-           0;
+        (bnum && !anum) ? 1 :
+            a < b ? -1 :
+                a > b ? 1 :
+                    0;
   }
 
   function rcompareIdentifiers(a, b) {
@@ -1017,17 +1012,17 @@
       else if (isX(m))
         ret = '>=' + M + '.0.0 <' + (+M + 1) + '.0.0';
       else if (isX(p))
-        // ~1.2 == >=1.2.0- <1.3.0-
+      // ~1.2 == >=1.2.0- <1.3.0-
         ret = '>=' + M + '.' + m + '.0 <' + M + '.' + (+m + 1) + '.0';
       else if (pr) {
         if (pr.charAt(0) !== '-')
           pr = '-' + pr;
         ret = '>=' + M + '.' + m + '.' + p + pr +
-              ' <' + M + '.' + (+m + 1) + '.0';
+            ' <' + M + '.' + (+m + 1) + '.0';
       } else
-        // ~1.2.3 == >=1.2.3 <1.3.0
+      // ~1.2.3 == >=1.2.3 <1.3.0
         ret = '>=' + M + '.' + m + '.' + p +
-              ' <' + M + '.' + (+m + 1) + '.0';
+            ' <' + M + '.' + (+m + 1) + '.0';
 
       return ret;
     });
@@ -1065,24 +1060,24 @@
         if (M === '0') {
           if (m === '0')
             ret = '>=' + M + '.' + m + '.' + p + pr +
-                  ' <' + M + '.' + m + '.' + (+p + 1);
+                ' <' + M + '.' + m + '.' + (+p + 1);
           else
             ret = '>=' + M + '.' + m + '.' + p + pr +
-                  ' <' + M + '.' + (+m + 1) + '.0';
+                ' <' + M + '.' + (+m + 1) + '.0';
         } else
           ret = '>=' + M + '.' + m + '.' + p + pr +
-                ' <' + (+M + 1) + '.0.0';
+              ' <' + (+M + 1) + '.0.0';
       } else {
         if (M === '0') {
           if (m === '0')
             ret = '>=' + M + '.' + m + '.' + p +
-                  ' <' + M + '.' + m + '.' + (+p + 1);
+                ' <' + M + '.' + m + '.' + (+p + 1);
           else
             ret = '>=' + M + '.' + m + '.' + p +
-                  ' <' + M + '.' + (+m + 1) + '.0';
+                ' <' + M + '.' + (+m + 1) + '.0';
         } else
           ret = '>=' + M + '.' + m + '.' + p +
-                ' <' + (+M + 1) + '.0.0';
+              ' <' + (+M + 1) + '.0.0';
       }
 
       return ret;
@@ -1256,10 +1251,10 @@
 
   function maxSatisfying(versions, range, loose) {
     return versions.filter(function(version) {
-      return satisfies(version, range, loose);
-    }).sort(function(a, b) {
-      return rcompare(a, b, loose);
-    })[0] || null;
+          return satisfies(version, range, loose);
+        }).sort(function(a, b) {
+          return rcompare(a, b, loose);
+        })[0] || null;
   }
 
   function validRange(range, loose) {
